@@ -1,2 +1,2 @@
 # UnofficalRUAPP
-A better version of the ryerson mobile app.
+My version of the ryerson mobile app.
