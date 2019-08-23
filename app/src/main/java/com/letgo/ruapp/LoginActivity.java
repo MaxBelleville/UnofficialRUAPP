@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import android.webkit.WebSettings;
@@ -43,16 +44,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login (String user, String pass){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }).start();
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
         webView.loadUrl("https:cas.ryerson.ca/login");
         Activity activity=this;
         webView.getSettings().setJavaScriptEnabled(true);
-       // webView.getSettings().setBlockNetworkLoads(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) webView.setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT,true);
-        else webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        if (Build.VERSION.SDK_INT >= 19) webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        else webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.getSettings().setBlockNetworkImage(true);
+   //     webView.getSettings().setAppCacheEnabled(true);
+    //  webView.getSettings().setUserAgentString("Mozilla/5.0 (Android 8.0; Mobile; rv:64.0) Gecko/64.0 Firefox/64.0");
         webView.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url){
                 CookieSyncManager.getInstance().sync();

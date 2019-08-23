@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="128dp"
-        android:background="@drawable/rect"
-        android:elevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/courseCode"
+            android:id="@+id/dateInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="No class today."
+            android:text="Monday, Sept 2, 2019"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/classInfo"
+            android:id="@+id/classInfo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="No classes in schedule today. Congrats!"
+            android:text="No classes today."
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseCode" />
+            app:layout_constraintTop_toBottomOf="@id/dateInfo" />
 
         <TextView
-            android:id="@+id/profInfo"
+            android:id="@+id/profInfo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -48,10 +46,10 @@
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/timeTillNext" />
+            app:layout_constraintTop_toBottomOf="@+id/courseCode2" />
 
         <TextView
-            android:id="@+id/roomInfo"
+            android:id="@+id/roomInfo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -59,10 +57,10 @@
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/profInfo2" />
 
         <TextView
-            android:id="@+id/classTime"
+            android:id="@+id/classTime2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -70,10 +68,10 @@
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/classInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/classInfo2" />
 
         <TextView
-            android:id="@+id/viewAssigned"
+            android:id="@+id/viewAssigned2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -83,10 +81,10 @@
             android:textSize="12dp"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/classTime" />
+            app:layout_constraintTop_toBottomOf="@+id/classTime2" />
 
         <TextView
-            android:id="@+id/sectionInfo"
+            android:id="@+id/sectionInfo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -94,10 +92,10 @@
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/roomInfo" />
+            app:layout_constraintTop_toBottomOf="@id/roomInfo2" />
 
         <TextView
-            android:id="@+id/timeTillNext"
+            android:id="@+id/courseCode2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -107,14 +105,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1F000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="128dp"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-        tools:layout_editor_absoluteX="-16dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

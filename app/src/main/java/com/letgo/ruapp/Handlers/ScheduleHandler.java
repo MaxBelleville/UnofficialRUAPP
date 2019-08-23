@@ -23,6 +23,7 @@ public class ScheduleHandler extends Handler {
     private static boolean isDone=false;
     //Todo put this all in one object.
     public static ArrayList<String> date = new ArrayList<String>();
+    public static ArrayList<String> courseDate = new ArrayList<String>();
     public static ArrayList<String> timeStart = new ArrayList<String>();
     public static ArrayList<String> timeEnd = new ArrayList<String>();
     public static ArrayList<String> courseCode = new ArrayList<String>();
@@ -50,17 +51,25 @@ public class ScheduleHandler extends Handler {
         long closestTime=Long.MAX_VALUE;
         int closestIndx=-1;
         for(int i=0;i<courseCode.size();i++) {
-            Calendar cal = Calendar.getInstance();
-            Calendar oldCal = Calendar.getInstance();
-            oldCal.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
-            oldCal.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1]));
-            long diffMs = oldCal.getTime().getTime() - cal.getTime().getTime();
-            if(diffMs>=0) {
-                if (closestTime > diffMs) {
-                    diffHour = diffMs / (1000 * 3600); //2:30 -> 3600+3600+1800
-                    diffMin =  (diffMs / (1000 * 60)) %60;
-                    closestTime = diffMs;
-                    closestIndx = i;
+            if(!courseCode.get(i).equals("Nothing")) {
+                Calendar cal = Calendar.getInstance();
+                Calendar oldCal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.ENGLISH);
+                try {
+                    oldCal.setTime(sdf.parse(courseDate.get(i)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                oldCal.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
+                oldCal.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1]));
+                long diffMs = oldCal.getTime().getTime() - cal.getTime().getTime();
+                if (diffMs >= 0) {
+                    if (closestTime > diffMs) {
+                        diffHour = diffMs / (1000 * 3600); //2:30 -> 3600+3600+1800
+                        diffMin = (diffMs / (1000 * 60)) % 60;
+                        closestTime = diffMs;
+                        closestIndx = i;
+                    }
                 }
             }
         }
@@ -81,8 +90,8 @@ public class ScheduleHandler extends Handler {
                         String[] day = s.replace("\"", "").split(";");
                         for (int d = 0; d < day.length; d++) {
                             String[] info = day[d].split("&");
-                            if (info.length > 1) {
                                 date.add(info[0]);
+                            if (info.length > 1) {
                                 for (int i = 1; i < info.length; i += 5) {
                                     String codeAndTime = info[i];
                                     String course = info[i + 1];
@@ -94,6 +103,7 @@ public class ScheduleHandler extends Handler {
                                     String time1 = splitCode[1].substring(0, 2) + ":" + splitCode[1].substring(2, 4);
                                     String time2 = splitCode[1].substring(4, 6) + ":" + splitCode[1].substring(6, 8);
                                     courseCode.add(code);
+                                    courseDate.add(info[0]);
                                     courseName.add(course);
                                     prof.add(instructor);
                                     ScheduleHandler.room.add(room);
@@ -101,6 +111,17 @@ public class ScheduleHandler extends Handler {
                                     timeStart.add(time1);
                                     timeEnd.add(time2);
                                 }
+                            }
+                            else {
+                                courseDate.add(info[0]);
+                                courseCode.add("Nothing");
+                                courseName.add("Nothing");
+                                prof.add("Nothing");
+                                room.add("Nothing");
+                                section.add("Nothing");
+                                timeStart.add("Nothing");
+                                timeEnd.add("Nothing");
+                                Log.d("Special",info[0]);
                             }
                         }
                         webView.loadUrl("about:blank");
