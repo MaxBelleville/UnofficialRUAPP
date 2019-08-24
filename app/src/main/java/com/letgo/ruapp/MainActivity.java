@@ -12,6 +12,9 @@ import com.letgo.ruapp.Adapters.ScheduleAdapter;
 import com.letgo.ruapp.Handlers.ScheduleHandler;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,13 +48,22 @@ public class MainActivity extends AppCompatActivity {
     }
     private void updateNextClass(){
         int c=ScheduleHandler.nextClass();
-        for(int i =0;i<ScheduleHandler.date.size();i++) {
-            if(ScheduleHandler.isDate(i)) {
-                if(c!=-1){
+        //TODO: make C a enum.
+        //-2 means not today, -1 means all clases are finished.
+                if(c!=-2&&c!=-1){
+                    String startTime="";
+                    String endTime="";
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        startTime=new SimpleDateFormat("h:mm a").format(sdf.parse(ScheduleHandler.timeStart.get(c)));
+                        endTime=new SimpleDateFormat("h:mm a").format(sdf.parse(ScheduleHandler.timeEnd.get(c)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     courseCode.setText(ScheduleHandler.courseCode.get(c));
                     classInfo.setText(ScheduleHandler.courseName.get(c));
                     profInfo.setText(ScheduleHandler.prof.get(c));
-                    classTime.setText(ScheduleHandler.timeStart.get(c) + " - " + ScheduleHandler.timeEnd.get(c));
+                    classTime.setText(startTime+" -"+endTime);
                     roomInfo.setText(ScheduleHandler.room.get(c));
                     sectionInfo.setText(ScheduleHandler.section.get(c));
                     if(ScheduleHandler.diffHour>0&&ScheduleHandler.diffMin>0)
@@ -62,12 +74,10 @@ public class MainActivity extends AppCompatActivity {
                         timeTillNext.setText("In " +ScheduleHandler.diffMin+ " Minute(s)");
                     viewAssigned.setVisibility(View.VISIBLE);
                 }
-                else {
+                else if(c!=-2) {
                     courseCode.setText("All done for the day.");
                     classInfo.setText("No more classes, finish up at leave. Congrats!");
                 }
             }
-        }
-    }
 
 }

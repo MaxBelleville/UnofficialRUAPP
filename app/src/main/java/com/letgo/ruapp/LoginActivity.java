@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         webView.loadUrl("https:cas.ryerson.ca/login");
         Activity activity=this;
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setBlockNetworkImage(true);
+     //   webView.getSettings().setBlockNetworkImage(true);
    //     webView.getSettings().setAppCacheEnabled(true);
     //  webView.getSettings().setUserAgentString("Mozilla/5.0 (Android 8.0; Mobile; rv:64.0) Gecko/64.0 Firefox/64.0");
         webView.setWebViewClient(new WebViewClient(){

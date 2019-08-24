@@ -34,22 +34,10 @@ public class ScheduleHandler extends Handler {
     public static long diffHour=0;
     public static long diffMin=0;
 
-    public static boolean isDate(int index){
-        Calendar cal = Calendar.getInstance();
-        Calendar oldCal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.ENGLISH);
-        try {
-            oldCal.setTime(sdf.parse(date.get(index)));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return (oldCal.get(Calendar.YEAR)==cal.get(Calendar.YEAR)&&oldCal.get(Calendar.MONTH)==cal.get(Calendar.MONTH)&&
-          oldCal.get(Calendar.DAY_OF_MONTH)==cal.get(Calendar.DAY_OF_MONTH));
-    }
 
     public static int nextClass(){
         long closestTime=Long.MAX_VALUE;
-        int closestIndx=-1;
+        int closestIndx=-2;
         for(int i=0;i<courseCode.size();i++) {
             if(!courseCode.get(i).equals("Nothing")) {
                 Calendar cal = Calendar.getInstance();
@@ -60,15 +48,19 @@ public class ScheduleHandler extends Handler {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                oldCal.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
-                oldCal.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1]));
-                long diffMs = oldCal.getTime().getTime() - cal.getTime().getTime();
-                if (diffMs >= 0) {
-                    if (closestTime > diffMs) {
-                        diffHour = diffMs / (1000 * 3600); //2:30 -> 3600+3600+1800
-                        diffMin = (diffMs / (1000 * 60)) % 60;
-                        closestTime = diffMs;
-                        closestIndx = i;
+                    oldCal.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
+                    oldCal.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1]));
+                if(oldCal.get(Calendar.YEAR)==cal.get(Calendar.YEAR)&&oldCal.get(Calendar.MONTH)==cal.get(Calendar.MONTH)&&
+                        oldCal.get(Calendar.DAY_OF_MONTH)==cal.get(Calendar.DAY_OF_MONTH)){
+                    if(closestIndx==-2)closestIndx=-1;
+                    long diffMs = oldCal.getTime().getTime() - cal.getTime().getTime();
+                    if (diffMs >= 0) {
+                        if (closestTime > diffMs) {
+                            diffHour = diffMs / (1000 * 3600); //2:30 -> 3600+3600+1800
+                            diffMin = (diffMs / (1000 * 60)) % 60;
+                            closestTime = diffMs;
+                            closestIndx = i;
+                        }
                     }
                 }
             }
@@ -104,6 +96,7 @@ public class ScheduleHandler extends Handler {
                                     String time2 = splitCode[1].substring(4, 6) + ":" + splitCode[1].substring(6, 8);
                                     courseCode.add(code);
                                     courseDate.add(info[0]);
+                                    if(i!=1) date.add("Nothing");
                                     courseName.add(course);
                                     prof.add(instructor);
                                     ScheduleHandler.room.add(room);
