@@ -5,7 +5,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.letgo.ruapp.Handlers.LoginHandler;
 import com.letgo.ruapp.Handlers.ScheduleHandler;
@@ -54,9 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         webView.loadUrl("https:cas.ryerson.ca/login");
         Activity activity=this;
         webView.getSettings().setJavaScriptEnabled(true);
-     //   webView.getSettings().setBlockNetworkImage(true);
-   //     webView.getSettings().setAppCacheEnabled(true);
-    //  webView.getSettings().setUserAgentString("Mozilla/5.0 (Android 8.0; Mobile; rv:64.0) Gecko/64.0 Firefox/64.0");
         webView.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String url){
                 CookieSyncManager.getInstance().sync();
@@ -69,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                     scheduleHandler.update();
                 }
                 else {
+                    scheduleHandler.save();
                     Intent intent = new Intent(activity,MainActivity.class);
                     startActivity(intent);
                 }
@@ -81,12 +83,26 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (mWifi.isConnected()) {
        String str= new LoginHandler().load(getApplicationContext());
                 if(!str.isEmpty()){
             String[] split =str.split("\t");
             webLayout.setVisibility(View.GONE);
             loadingLayout.setVisibility(View.VISIBLE);
             login(split[0],split[1]);
+        }
+        }
+        else {
+            Toast.makeText(this, "No Internet", Toast.LENGTH_LONG).show();
+            webLayout.setVisibility(View.GONE);
+           // new ScheduleHandler().logLoad(getApplicationContext());
+            if(new ScheduleHandler().load(getApplicationContext())){
+                Intent intent = new Intent(this,MainActivity.class);
+                startActivity(intent);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.letgo.ruapp.Handlers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.webkit.ValueCallback;
@@ -8,6 +9,13 @@ import android.webkit.WebView;
 
 import com.letgo.ruapp.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,8 +42,10 @@ public class ScheduleHandler extends Handler {
     public static long diffHour=0;
     public static long diffMin=0;
 
+    public ScheduleHandler() {}
 
-    public static int nextClass(){
+
+    public int nextClass(){
         long closestTime=Long.MAX_VALUE;
         int closestIndx=-2;
         for(int i=0;i<courseCode.size();i++) {
@@ -124,7 +134,72 @@ public class ScheduleHandler extends Handler {
             });
         }
     }
-
+    public void save(){
+        FileOutputStream outputStream;
+        Log.d("Special","saving");
+        try {
+            outputStream = context.openFileOutput("scheduleOffline", Context.MODE_PRIVATE);
+            for(int i=0;i<date.size();i++) {
+                outputStream.write(date.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(courseDate.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(courseName.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(courseCode.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(timeStart.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(timeEnd.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(prof.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(room.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+                outputStream.write(section.get(i).getBytes());
+                outputStream.write("\n".getBytes());
+            }
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean load(Context context){
+        try {
+            FileInputStream fileInputStream = context.openFileInput("scheduleOffline");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader br = new BufferedReader(inputStreamReader);
+            String line;
+            while((line = br.readLine()) != null){
+                date.add(line);
+                courseDate.add(br.readLine());
+                courseName.add(br.readLine());
+                courseCode.add(br.readLine());
+                timeStart.add(br.readLine());
+                timeEnd.add(br.readLine());
+                prof.add(br.readLine());
+                room.add(br.readLine());
+                section.add(br.readLine());
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    public void logLoad(Context context){
+        String str="";
+        try {
+            FileInputStream fin = context.openFileInput("scheduleOffline");
+            int c;
+            while( (c = fin.read()) != -1){
+                str += (char)c;
+            }
+            fin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("Special",str);
+    }
     public ScheduleHandler(Activity activity, WebView view, String jsLoc) {
         super(activity.getApplicationContext(),view,jsLoc);
         ButterKnife.bind(this, activity);

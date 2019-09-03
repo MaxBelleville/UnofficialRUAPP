@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void updateNextClass(){
-        int c=ScheduleHandler.nextClass();
+        int c=new ScheduleHandler().nextClass();
         //TODO: make C a enum.
         //-2 means not today, -1 means all clases are finished.
                 if(c!=-2&&c!=-1){

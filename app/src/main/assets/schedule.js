@@ -17,12 +17,13 @@ return true;
 }
 else {
  var finalText="";
- var items=document.getElementsByClassName("schedListViewInformation");
+ var items=document.querySelectorAll('.schedListViewInformation,.weeklyresult');
  for (var i=0;i<items.length;i++) {
  var splitItems = items[i].innerText.trim().split("\n");
  for (var n=0;n<splitItems.length;n++){
  var item = (splitItems[n].trim().match(/[\w (]/g)+"").replace(/,/g,"");
  if(item!=""&&item!="null")finalText+=item+"&"}
  finalText= finalText.substr(0,finalText.length-1)+";";}
+ finalText=finalText.replace("(today","");
  return finalText;}}
  schedule();
