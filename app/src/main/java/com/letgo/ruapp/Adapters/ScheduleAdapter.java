@@ -32,13 +32,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewHo
         holder.borderLine.setBackgroundColor(Color.parseColor("#50000000"));
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd yyyy");
         Date d = null;
+        String date="";
         try {
             d = sdf.parse(ScheduleHandler.courseDate.get(i));
+            sdf.applyPattern("EEEE, MMM dd");
+            date= sdf.format(d);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        sdf.applyPattern("EEEE, MMM dd");
-        String date = sdf.format(d);
         if(ScheduleHandler.courseCode.get(i).equals("Nothing")){
             holder.dateInfo.setText(date);
             holder.courseInfo.setText("");
