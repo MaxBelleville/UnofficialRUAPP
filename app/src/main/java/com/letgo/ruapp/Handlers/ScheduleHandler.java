@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,45 +43,63 @@ public class ScheduleHandler extends Handler {
     public static ArrayList<String> section = new ArrayList<String>();
     public static long diffHour = 0;
     public static long diffMin = 0;
-    public static boolean classIsGoing = false;
-
+    public static boolean shouldBeInClass=false;
     public ScheduleHandler() {
     }
-
 
     public int nextClass() {
         long closestTime = Long.MAX_VALUE;
         int closestIndx = -2;
+        Calendar cal=Calendar.getInstance();
         for (int i = 0; i < courseCode.size(); i++) {
             if (!courseCode.get(i).equals("Nothing")) {
-                Calendar cal = Calendar.getInstance();
-                Calendar oldCal = Calendar.getInstance();
-                Calendar finalCal = Calendar.getInstance();
+                Calendar classStart = Calendar.getInstance();
+                Calendar nextClass=Calendar.getInstance();
+                Calendar classEnd = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.ENGLISH);
                 try {
-                    oldCal.setTime(sdf.parse(courseDate.get(i)));
-                    finalCal.setTime(sdf.parse(courseDate.get(i)));
+                    if(i<courseCode.size())
+                        if(!timeStart.get(i+1).equals("Nothing"))
+                            nextClass.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i+1))));
+                    classStart.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i))));
+                    classEnd.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i))));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                oldCal.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
-                oldCal.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1]));
-                finalCal.set(Calendar.HOUR, Integer.parseInt(timeEnd.get(i).split(":")[0]));
-                finalCal.set(Calendar.MINUTE, Integer.parseInt(timeEnd.get(i).split(":")[1]));
-                if (oldCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && oldCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH) &&
-                        oldCal.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) {
+                if(i<courseCode.size()) {
+                    if(!timeStart.get(i+1).equals("Nothing")){
+                    nextClass.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i+1).split(":")[0]));
+                    nextClass.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i+1).split(":")[1])+1);
+                    }
+                }
+                classStart.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
+                classStart.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1])+1);
+                classEnd.set(Calendar.HOUR, Integer.parseInt(timeEnd.get(i).split(":")[0]));
+                classEnd.set(Calendar.MINUTE, Integer.parseInt(timeEnd.get(i).split(":")[1])+1);
+                if (classStart.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && classStart.get(Calendar.DAY_OF_YEAR)==cal.get(Calendar.DAY_OF_YEAR)) {
                     if(closestIndx==-2)closestIndx=-1;
-                    long diffMs = oldCal.getTime().getTime() - cal.getTime().getTime();
-                    long diffEndMs = finalCal.getTime().getTime() - cal.getTime().getTime();
-                    if (closestTime > diffEndMs) {
-                        if(diffMs>0) {
-                            diffHour = diffMs / (1000 * 3600); //2:30 -> 3600+3600+1800
+                    long diffNext = nextClass.getTime().getTime() - cal.getTime().getTime();
+                    long diffMs = classStart.getTime().getTime() - cal.getTime().getTime();
+                    long diffEndMs = classEnd.getTime().getTime() - cal.getTime().getTime();
+                    if (closestTime > diffMs) {
+                        if(diffMs>0) {//If the class hasn't started current time update diffHour and diffMin.
+                            shouldBeInClass=false;
+                            diffHour = diffMs / (1000 * 3600);
                             diffMin = (diffMs / (1000 * 60)) % 60;
                         }
-                        else if(diffEndMs>0){
-                            classIsGoing=true;
+                        else if(diffEndMs>0) {
+                            Log.d("Special","In a class");
+                            shouldBeInClass=true;
+                            if(i<courseCode.size()) {
+                                if (!timeStart.get(i + 1).equals("Nothing")) {
+                                    if (diffNext > 0) {
+                                        diffHour = diffNext / (1000 * 3600);
+                                        diffMin = (diffNext / (1000 * 60)) % 60;
+                                    }
+                                }
+                            }
                         }
-                        if(diffEndMs>0){
+                        if(diffEndMs>0){//If the class hasn't ended make that the closest class.
                             closestIndx =i;
                             closestTime = diffEndMs;
                         }

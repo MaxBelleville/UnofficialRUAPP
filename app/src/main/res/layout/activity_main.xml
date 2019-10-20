@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="@android:color/white"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/showNextClass"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="90dp"
         android:background="@drawable/rect"
         android:elevation="4dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="No classes in schedule today. Congrats!"
             android:textColor="@color/xdGray"
             android:textSize="12dp"
@@ -43,12 +45,23 @@
             android:id="@+id/profInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timeTillNext" />
+
+        <TextView
+            android:id="@+id/timeTillNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/xdGray"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeTillClass" />
 
         <TextView
             android:id="@+id/roomInfo"
@@ -76,8 +89,8 @@
             android:id="@+id/viewAssigned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
             android:text="View My Assignments"
             android:textColor="@color/ryersonBlue"
             android:textSize="12dp"
@@ -89,7 +102,7 @@
             android:id="@+id/sectionInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:textColor="@color/xdGray"
             android:textSize="12dp"
@@ -97,7 +110,7 @@
             app:layout_constraintTop_toBottomOf="@id/roomInfo" />
 
         <TextView
-            android:id="@+id/timeTillNext"
+            android:id="@+id/timeTillClass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -109,12 +122,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="128dp"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-        tools:layout_editor_absoluteX="-16dp" />
-
+        app:defaultNavHost="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showNextClass"
+        app:navGraph="@navigation/ry_nav_graph" />
 </androidx.constraintlayout.widget.ConstraintLayout>

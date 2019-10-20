@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ry_nav_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.letgo.ruapp.Home.HomeFragment"
+        android:label="content_home"
+        tools:layout="@layout/content_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_scheduleFragment"
+            app:destination="@id/scheduleFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_assigmentsFragment"
+            app:destination="@id/assigmentsCoursesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.letgo.ruapp.Schedule.ScheduleFragment"
+        android:label="content_schedule"
+        tools:layout="@layout/content_schedule" />
+    <fragment
+        android:id="@+id/assigmentsCoursesFragment"
+        android:name="com.letgo.ruapp.Assigments.AssigmentsCoursesFragment"
+        android:label="content_assigments_courses"
+        tools:layout="@layout/content_assigments_courses" >
+        <action
+            android:id="@+id/action_assigmentsCoursesFragment_to_assigmentsList"
+            app:destination="@id/assigmentsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/assigmentsList"
+        android:name="com.letgo.ruapp.Assigments.AssigmentsList"
+        android:label="content_assigments_list"
+        tools:layout="@layout/content_assigments_list" >
+        <action
+            android:id="@+id/action_assigmentsList_to_assigmentFragment"
+            app:destination="@id/assigmentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/assigmentFragment"
+        android:name="com.letgo.ruapp.Assigments.AssigmentFragment"
+        android:label="content_assigment"
+        tools:layout="@layout/content_assigment" />
+</navigation>

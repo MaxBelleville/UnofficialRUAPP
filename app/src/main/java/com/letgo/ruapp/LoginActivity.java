@@ -48,12 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login (String user, String pass){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP)
         webView.loadUrl("https:cas.ryerson.ca/login");
         Activity activity=this;
