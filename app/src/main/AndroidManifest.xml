@@ -12,8 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".Services.NotificationService">
+        </service>
         <activity android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -23,6 +27,7 @@
         </activity>
         <activity android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 

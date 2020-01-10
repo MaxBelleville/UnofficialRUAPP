@@ -13,13 +13,181 @@
             android:orientation="vertical" >
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/loginLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/ru_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:hint="my.ryerson username"
+                    android:inputType="textEmailAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/incorrectText" />
+
+                <EditText
+                    android:id="@+id/ru_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:ems="10"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ru_username" />
+
+                <EditText
+                    android:id="@+id/ru_token"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="256dp"
+                    android:ems="10"
+                    android:hint="Token"
+                    android:inputType="number"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ru_password" />
+
+                <Button
+                    android:id="@+id/ru_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:background="@color/ryersonBlue"
+                    android:text="Log in"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ru_token" />
+
+                <ImageView
+                    android:id="@+id/circle"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="19dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/forgot_password"
+                    app:srcCompat="@drawable/ic_circle" />
+
+                <ImageView
+                    android:id="@+id/circle2"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="27dp"
+                    android:background="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ru_login"
+                    app:srcCompat="@drawable/ic_circle" />
+
+                <TextView
+                    android:id="@+id/login_issue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Can't log in?"
+                    android:textColor="@color/ryersonBlue"
+                    app:layout_constraintStart_toEndOf="@+id/circle"
+                    app:layout_constraintTop_toBottomOf="@+id/forgot_password" />
+
+                <TextView
+                    android:id="@+id/forgot_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Forgot password?"
+                    android:textColor="@color/ryersonBlue"
+                    app:layout_constraintStart_toEndOf="@+id/circle"
+                    app:layout_constraintTop_toBottomOf="@+id/ru_login" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="192dp"
+                    android:layout_height="128dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:foreground="@drawable/ic_ryerson_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/techMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="For technical issues, please contact the app's creator."
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/login_issue" />
+
+                <TextView
+                    android:id="@+id/warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="Notice: This application is not officially endorsed by Ryerson University. We do not gather any Ryerson University data all data is saved client-side. For any other inquires about this app please contact, belleville.max@gmail.com. "
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintTop_toBottomOf="@+id/techMessage" />
+
+                <TextView
+                    android:id="@+id/incorrectText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Incorrect password or username, please try again."
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="32dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/techMessage"
+                    app:srcCompat="@drawable/ic_warning_black_24dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/loadingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/imageView5"
                     android:layout_width="192dp"
                     android:layout_height="128dp"
                     android:layout_marginStart="16dp"
@@ -45,10 +213,10 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
                 <pl.droidsonroids.gif.GifImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageView6"
                     android:layout_width="128dp"
                     android:layout_height="128dp"
                     android:layout_marginStart="16dp"
@@ -62,182 +230,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <WebView
-                    android:id="@+id/webView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/fakeWebView" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/fakeWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible">
-
-                    <EditText
-                        android:id="@+id/ru_username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="48dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:ems="10"
-                        android:hint="my.ryerson username"
-                        android:inputType="textEmailAddress"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/incorrectText" />
-
-                    <EditText
-                        android:id="@+id/ru_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="48dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:ems="10"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ru_username" />
-
-                    <Button
-                        android:id="@+id/ru_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="32dp"
-                        android:background="@color/ryersonBlue"
-                        android:text="Log in"
-                        android:textColor="@android:color/white"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ru_password" />
-
-                    <ImageView
-                        android:id="@+id/circle"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="19dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/forgot_password"
-                        app:srcCompat="@drawable/ic_circle" />
-
-                    <ImageView
-                        android:id="@+id/circle2"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="35dp"
-                        android:background="@android:color/white"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ru_login"
-                        app:srcCompat="@drawable/ic_circle" />
-
-                    <TextView
-                        android:id="@+id/login_issue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Can't log in?"
-                        android:textColor="@color/ryersonBlue"
-                        app:layout_constraintStart_toEndOf="@+id/circle"
-                        app:layout_constraintTop_toBottomOf="@+id/forgot_password" />
-
-                    <TextView
-                        android:id="@+id/forgot_password"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="32dp"
-                        android:text="Forgot password?"
-                        android:textColor="@color/ryersonBlue"
-                        app:layout_constraintStart_toEndOf="@+id/circle"
-                        app:layout_constraintTop_toBottomOf="@+id/ru_login" />
-
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="192dp"
-                        android:layout_height="128dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:foreground="@drawable/ic_ryerson_logo"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/techMessage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="48dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="For technical issues, please contact the app's creator."
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/login_issue" />
-
-                    <TextView
-                        android:id="@+id/warning"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="48dp"
-                        android:layout_marginLeft="48dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="32dp"
-                        android:text="Notice: This application is not officially endorsed by Ryerson University. We do not gather any Ryerson University data all data is saved client-side. For any other inquires about this app please contact, belleville.max@gmail.com. "
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imageView4"
-                        app:layout_constraintTop_toBottomOf="@+id/techMessage" />
-
-                    <TextView
-                        android:id="@+id/incorrectText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Incorrect password or username, try again."
-                        android:textColor="@android:color/holo_red_dark"
-                        android:visibility="invisible"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-                    <ImageView
-                        android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="32dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/techMessage"
-                        app:srcCompat="@drawable/ic_warning_black_24dp" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
 </ScrollView>

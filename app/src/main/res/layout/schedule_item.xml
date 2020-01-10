@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="129dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,25 +28,32 @@
 
         <TextView
             android:id="@+id/classInfo2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="textMultiLine|textNoSuggestions"
             android:text="No classes today."
             android:textColor="@color/xdGray"
             android:textSize="12dp"
+            app:layout_constraintEnd_toStartOf="@+id/center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dateInfo" />
 
         <TextView
             android:id="@+id/profInfo2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:gravity="right"
+            android:inputType="textMultiLine|textNoSuggestions"
             android:textColor="@color/xdGray"
             android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/center"
             app:layout_constraintTop_toBottomOf="@+id/courseCode2" />
 
         <TextView
@@ -76,10 +84,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
             android:text="View My Assignments"
             android:textColor="@color/ryersonBlue"
             android:textSize="12dp"
             android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/classTime2" />
 
@@ -99,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +119,17 @@
             android:id="@+id/borderLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:background="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/center"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
             android:background="#51000000"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

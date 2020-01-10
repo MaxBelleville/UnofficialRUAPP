@@ -1,195 +1,215 @@
 package com.letgo.ruapp.Handlers;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.webkit.ValueCallback;
-import android.webkit.WebView;
+import android.view.View;
 
+import androidx.navigation.Navigation;
+
+import com.letgo.ruapp.MainActivity;
 import com.letgo.ruapp.R;
+import com.letgo.ruapp.Requests.ScheduleRequest;
+import com.letgo.ruapp.Requests.SimpleCallback;
+import com.letgo.ruapp.Schedule.ScheduleObject;
+import com.letgo.ruapp.Schedule.ScheduleObject.Status;
+import com.letgo.ruapp.Services.RetrofitClient;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.Date;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
-public class ScheduleHandler extends Handler {
-    @BindView(R.id.webView)
-    WebView webView;
+public class ScheduleHandler {
 
-    private static boolean isDone = false;
-    //Todo put this all in one object.
-    public static ArrayList<String> date = new ArrayList<String>();
-    public static ArrayList<String> courseDate = new ArrayList<String>();
-    public static ArrayList<String> timeStart = new ArrayList<String>();
-    public static ArrayList<String> timeEnd = new ArrayList<String>();
-    public static ArrayList<String> courseCode = new ArrayList<String>();
-    public static ArrayList<String> courseName = new ArrayList<String>();
-    public static ArrayList<String> prof = new ArrayList<String>();
-    public static ArrayList<String> room = new ArrayList<String>();
-    public static ArrayList<String> section = new ArrayList<String>();
-    public static long diffHour = 0;
-    public static long diffMin = 0;
-    public static boolean shouldBeInClass=false;
-    public ScheduleHandler() {
+    private static ArrayList<ScheduleObject> courseObjs = new ArrayList<ScheduleObject>();
+
+    public ArrayList<ScheduleObject> getSchedule() {
+        return courseObjs;
     }
+    private String readWeek;
+    private String diffTime;
+    private ScheduleObject nextObj;
 
-    public int nextClass() {
-        long closestTime = Long.MAX_VALUE;
-        int closestIndx = -2;
-        Calendar cal=Calendar.getInstance();
-        for (int i = 0; i < courseCode.size(); i++) {
-            if (!courseCode.get(i).equals("Nothing")) {
-                Calendar classStart = Calendar.getInstance();
-                Calendar nextClass=Calendar.getInstance();
-                Calendar classEnd = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMMM dd yyyy", Locale.ENGLISH);
-                try {
-                    if(i<courseCode.size())
-                        if(!timeStart.get(i+1).equals("Nothing"))
-                            nextClass.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i+1))));
-                    classStart.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i))));
-                    classEnd.setTime(Objects.requireNonNull(sdf.parse(courseDate.get(i))));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if(i<courseCode.size()) {
-                    if(!timeStart.get(i+1).equals("Nothing")){
-                    nextClass.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i+1).split(":")[0]));
-                    nextClass.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i+1).split(":")[1])+1);
-                    }
-                }
-                classStart.set(Calendar.HOUR, Integer.parseInt(timeStart.get(i).split(":")[0]));
-                classStart.set(Calendar.MINUTE, Integer.parseInt(timeStart.get(i).split(":")[1])+1);
-                classEnd.set(Calendar.HOUR, Integer.parseInt(timeEnd.get(i).split(":")[0]));
-                classEnd.set(Calendar.MINUTE, Integer.parseInt(timeEnd.get(i).split(":")[1])+1);
-                if (classStart.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && classStart.get(Calendar.DAY_OF_YEAR)==cal.get(Calendar.DAY_OF_YEAR)) {
-                    if(closestIndx==-2)closestIndx=-1;
-                    long diffNext = nextClass.getTime().getTime() - cal.getTime().getTime();
-                    long diffMs = classStart.getTime().getTime() - cal.getTime().getTime();
-                    long diffEndMs = classEnd.getTime().getTime() - cal.getTime().getTime();
-                    if (closestTime > diffMs) {
-                        if(diffMs>0) {//If the class hasn't started current time update diffHour and diffMin.
-                            shouldBeInClass=false;
-                            diffHour = diffMs / (1000 * 3600);
-                            diffMin = (diffMs / (1000 * 60)) % 60;
+    public Status getStatus() {
+        Boolean classOnDate=false;
+        for (int i =0; i<courseObjs.size();i++){
+            Calendar cal = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            SimpleDateFormat daySdf = new SimpleDateFormat("EEEE, MMM dd");
+            SimpleDateFormat timeSdf = new SimpleDateFormat("h:mm aa");
+            try {
+                Date date = daySdf.parse(courseObjs.get(i).getVal("classDate"));
+                cal2.setTime(date);
+                if (compareDate(cal,cal2)&&!courseObjs.get(i).getVal("classStart").isEmpty()) {
+                    Log.d("Special",courseObjs.get(i).getVal("classDate"));
+                    cal.set(1970,0,1);//Default date
+                    Date curr=cal.getTime();
+                    classOnDate=true;
+                    nextObj=courseObjs.get(i);
+                    Date start = timeSdf.parse(courseObjs.get(i).getVal("classStart"));
+                    Date end = timeSdf.parse(courseObjs.get(i).getVal("classEnd"));
+                    Log.d("Special",start.getTime()+" "+curr.getTime());
+                    calcDiff(start.getTime()-curr.getTime());
+                    if (start.getTime()>curr.getTime()) return Status.WAITING;
+                    if (end.getTime()>curr.getTime()&&start.getTime()<=curr.getTime())  {
+                        if(i+1<courseObjs.size()) {
+                            start = timeSdf.parse(courseObjs.get(i+1).getVal("classStart"));
+                            calcDiff(start.getTime()-curr.getTime());
                         }
-                        else if(diffEndMs>0) {
-                            Log.d("Special","In a class");
-                            shouldBeInClass=true;
-                            if(i<courseCode.size()) {
-                                if (!timeStart.get(i + 1).equals("Nothing")) {
-                                    if (diffNext > 0) {
-                                        diffHour = diffNext / (1000 * 3600);
-                                        diffMin = (diffNext / (1000 * 60)) % 60;
-                                    }
-                                }
-                            }
-                        }
-                        if(diffEndMs>0){//If the class hasn't ended make that the closest class.
-                            closestIndx =i;
-                            closestTime = diffEndMs;
-                        }
+                        return Status.INCLASS;
                     }
                 }
             }
+            catch (ParseException e) { e.printStackTrace(); }
         }
-        return closestIndx;
+        if (classOnDate) return Status.DONE;
+        return Status.NOTHING;
     }
 
-    public boolean isDone() {
-        return isDone;
+    private boolean compareDate(Calendar currDate, Calendar classDate){
+        return currDate.get(Calendar.DAY_OF_YEAR)==classDate.get(Calendar.DAY_OF_YEAR);
     }
 
-    @Override
-    public void update(Object... object) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            view.evaluateJavascript(js, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-                    if (!s.equals("true")) {
-                        String[] day = s.replace("\"", "").split(";");
-                        for (int d = 0; d < day.length; d++) {
-                            String[] info = day[d].split("&");
-                            date.add(info[0]);
-                            if (info.length > 1) {
-                                for (int i = 1; i < info.length; i += 5) {
-                                    String codeAndTime = info[i];
-                                    String course = info[i + 1];
-                                    String section = info[i + 2];
-                                    String room = info[i + 3];
-                                    String instructor = info[i + 4].substring(info[i + 4].indexOf(' ') + 1, info[i + 4].length());
-                                    String[] splitCode = codeAndTime.split("\\(");
-                                    String code = splitCode[0];
-                                    String time1 = splitCode[1].substring(0, 2) + ":" + splitCode[1].substring(2, 4);
-                                    String time2 = splitCode[1].substring(4, 6) + ":" + splitCode[1].substring(6, 8);
-                                    courseCode.add(code);
-                                    courseDate.add(info[0]);
-                                    if (i != 1) date.add("Nothing");
-                                    courseName.add(course);
-                                    prof.add(instructor);
-                                    ScheduleHandler.room.add(room);
-                                    ScheduleHandler.section.add(section);
-                                    timeStart.add(time1);
-                                    timeEnd.add(time2);
-                                }
-                            } else {
-                                courseDate.add(info[0]);
-                                courseCode.add("Nothing");
-                                courseName.add("Nothing");
-                                prof.add("Nothing");
-                                room.add("Nothing");
-                                section.add("Nothing");
-                                timeStart.add("Nothing");
-                                timeEnd.add("Nothing");
-                                Log.d("Special", info[0]);
-                            }
-                        }
-                        webView.loadUrl("about:blank");
-                        ScheduleHandler.isDone = true;
-                    }
+    private void calcDiff(long diffMs){
+        long diffSec = diffMs/1000;
+        long min= diffSec % 60;
+        long hour= diffSec / 3600;
+        diffTime="";
+        if (hour>0 && min>0) diffTime= hour+" Hour(s) & "+ min+ " Min(s)";
+        else if (hour>0) diffTime= hour+" Hour(s)";
+        else if (min>0) diffTime= min+" Min(s)";
+    }
+
+    public String getDifference(){
+        return diffTime;
+    }
+    public ScheduleObject getNextObj(){
+        return nextObj;
+    }
+
+    public void readSchedule(Context context){
+        courseObjs.clear();
+        ScheduleRequest request=RetrofitClient.getRetrofit().create(ScheduleRequest.class);
+        Calendar cal = Calendar.getInstance();
+        Calendar week = Calendar.getInstance();
+        week.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        readWeek=sdf.format(week.getTime());
+        Call<ResponseBody> call =request.initSchedule(
+                "https://m.ryerson.ca/core_apps/schedule/index.cfm");
+        call.enqueue(new SimpleCallback<ResponseBody>(){
+            @Override
+            public void getResponse(ResponseBody response) throws IOException {
+                Document document = Jsoup.parse(response.string());
+                Element elem = document.getElementsByClass("schedBrowserInformation").get(0);
+                sdf.applyPattern("EEEE, MMMM dd, yyyy");
+                try {
+                    Date date= sdf.parse(elem.text());
+                    sdf.applyPattern("yyyy-MM-dd");
+                    String dateText=sdf.format(date);
+                    if (date.compareTo(week.getTime())>0) readWeek=dateText;
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            });
+                Call<ResponseBody> call =request.getSchedule(
+                        "https://m.ryerson.ca/core_apps/schedule/index.cfm",readWeek);
+                call.enqueue(new SimpleCallback<ResponseBody>(){
+                    @Override
+                    public void getResponse(ResponseBody response) throws IOException {
+                        Document document = Jsoup.parse(response.string());
+                        Elements elems = document.getElementsByClass("schedBrowserInformation");
+                        for (Element elem : elems){
+                            try {
+                                parse(elem.outerHtml());
+                            }
+                            catch (ParseException e) { e.printStackTrace(); }
+                        }
+                        save(context);
+                        Intent intent = new Intent(context,MainActivity.class);
+                        context.startActivity(intent);
+                    }
+                });
+            }
+        });
+    }
+    public void parse(String str) throws ParseException {
+        String[] split=str.split("<br>");
+        String[] courseInfo = Arrays.copyOfRange(split,2,split.length);
+        String date = split[0].replaceAll("\\<.*?\\>", "").trim();
+        SimpleDateFormat daySdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        Date d = daySdf.parse(date);
+        daySdf.applyPattern("EEEE, MMM dd");
+        String formattedDate= daySdf.format(d);
+        String[] formatted= new String[courseInfo.length];
+        for (int i =0; i<courseInfo.length;i++)
+            formatted[i]=courseInfo[i].replaceAll("\\<.*?\\>", "").replaceAll("\\s"," ").trim();
+        for (int i =0; i<formatted.length;i+=6){
+            ScheduleObject obj = startEmpty();
+            if (!formatted[i].isEmpty()) {
+                String[] firstItems = formatted[i].split(" ");
+                String[] time = firstItems[1].replaceAll("[()-]", " ").trim().split(" ");
+                SimpleDateFormat timeSdf = new SimpleDateFormat("kk:mm");
+                Date classStart = timeSdf.parse(time[0]);
+                Date classEnd = timeSdf.parse(time[1]);
+                timeSdf.applyPattern("h:mm aa");
+
+                if(i==0)obj.setInfo("date", formattedDate);
+                obj.setInfo("classDate", formattedDate);
+                obj.setInfo("courseName", formatted[i + 1]);
+                obj.setInfo("courseCode", firstItems[0]);
+                obj.setInfo("classStart", timeSdf.format(classStart));
+                obj.setInfo("classEnd", timeSdf.format(classEnd));
+                obj.setInfo("section", formatted[i + 2]);
+                obj.setInfo("location", formatted[i + 3]);
+                obj.setInfo("instructor", formatted[i + 4].replace("assigned, Instructor","TA"));
+            }
+            else {
+                obj.setInfo("date", formattedDate);
+                obj.setInfo("classDate", formattedDate);
+            }
+            courseObjs.add(obj);
+            AssigmenetHandler handler = new AssigmenetHandler();
+            handler.addObject(obj);
         }
+
+    }
+    private ScheduleObject startEmpty(){
+        ScheduleObject obj = new ScheduleObject();
+        obj.setInfo("date", "");
+        obj.setInfo("classDate", "");
+        obj.setInfo("courseName", "");
+        obj.setInfo("courseCode", "");
+        obj.setInfo("classStart", "");
+        obj.setInfo("classEnd", "");
+        obj.setInfo("section", "");
+        obj.setInfo("location", "");
+        obj.setInfo("instructor", "");
+        return obj;
     }
 
-    public void save() {
+    public void save(Context context) {
         FileOutputStream outputStream;
-        Log.d("Special", "saving");
         try {
             outputStream = context.openFileOutput("scheduleOffline", Context.MODE_PRIVATE);
-            for (int i = 0; i < date.size(); i++) {
-                outputStream.write(date.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(courseDate.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(courseName.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(courseCode.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(timeStart.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(timeEnd.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(prof.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(room.get(i).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(section.get(i).getBytes());
-                outputStream.write("\n".getBytes());
+           for (ScheduleObject objs : courseObjs) {
+                outputStream.write(objs.save().getBytes());
             }
             outputStream.close();
         } catch (Exception e) {
@@ -198,47 +218,50 @@ public class ScheduleHandler extends Handler {
     }
 
     public boolean load(Context context) {
+        courseObjs.clear();
         try {
             FileInputStream fileInputStream = context.openFileInput("scheduleOffline");
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader br = new BufferedReader(inputStreamReader);
             String line;
             while ((line = br.readLine()) != null) {
-                date.add(line);
-                courseDate.add(br.readLine());
-                courseName.add(br.readLine());
-                courseCode.add(br.readLine());
-                timeStart.add(br.readLine());
-                timeEnd.add(br.readLine());
-                prof.add(br.readLine());
-                room.add(br.readLine());
-                section.add(br.readLine());
+                  ScheduleObject obj= new ScheduleObject();
+                  obj.setInfo("instructor",line);
+                  obj.setInfo("location",br.readLine());
+                  obj.setInfo("section",br.readLine());
+                  obj.setInfo("courseName",br.readLine());
+                  obj.setInfo("classEnd",br.readLine());
+                  obj.setInfo("classDate",br.readLine());
+                  obj.setInfo("date",br.readLine());
+                  obj.setInfo("courseCode",br.readLine());
+                  obj.setInfo("classStart",br.readLine());
+
+                courseObjs.add(obj);
+                AssigmenetHandler handler = new AssigmenetHandler();
+                handler.addObject(obj);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+        Log.d("Special","True");
         return true;
     }
 
-    public void logLoad(Context context) {
-        String str = "";
-        try {
-            FileInputStream fin = context.openFileInput("scheduleOffline");
-            int c;
-            while ((c = fin.read()) != -1) {
-                str += (char) c;
-            }
-            fin.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d("Special", str);
+    public int find(int pos){
+    int pos2=0;
+    ArrayList<ScheduleObject> course = new AssigmenetHandler().getSchedule();
+
+    for(int i =0; i<course.size();i++){
+        if(courseObjs.get(pos).getVal("courseCode")==course.get(i).getVal("courseCode"))
+            pos2=i;
+    }
+    return pos2;
     }
 
-    public ScheduleHandler(Activity activity, WebView view, String jsLoc) {
-        super(activity.getApplicationContext(), view, jsLoc);
-        ButterKnife.bind(this, activity);
+    public void click(View view, int pos) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("ID", find(pos));
+        Navigation.findNavController(view).navigate(R.id.action_scheduleFragment_to_assigmentBlank,bundle);
     }
-
-
 }
