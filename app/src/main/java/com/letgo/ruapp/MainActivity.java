@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,17 +45,16 @@ public class MainActivity extends AppCompatActivity {
     TextView nextClass;
     @BindView(R.id.showNextClass)
     ConstraintLayout showNextClass;
-    private int c=0;
+    private ScheduleObject obj;
     @OnClick(R.id.showNextClass)
     void click(View v){
         ScheduleHandler handler=new ScheduleHandler();
         Bundle bundle = new Bundle();
-        bundle.putInt("ID", handler.find(c));
         if(viewAssigned.getVisibility()==View.VISIBLE){
+            bundle.putInt("ID", handler.find(obj));
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack(R.id.homeFragment,false);
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeFragment_to_assigmentBlank,bundle);
         }
-
     }
     private String startTime = "";
     private String endTime = "";
@@ -66,14 +66,14 @@ public class MainActivity extends AppCompatActivity {
         startService(i);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-       // updateNextClass();
+        updateNextClass();
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                       // updateNextClass();
+                        updateNextClass();
                     }
                 });
             }
@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
     private void updateNextClass() {
         ScheduleHandler handler=new ScheduleHandler();
         Status status = handler.getStatus();
-        ScheduleObject obj=handler.getNextObj();
+        obj=handler.getNextObj();
         if (status==Status.INCLASS || status==Status.WAITING){
             if (status==Status.INCLASS) {
                 timeTillNext.setText("Currently");
-                nextClass.setText(("Next class: "+handler.getDifference()));
+                nextClass.setText(("Next: "+handler.getDifference()));
                 if(!handler.getDifference().isEmpty())nextClass.setVisibility(View.VISIBLE);
             }
             else {

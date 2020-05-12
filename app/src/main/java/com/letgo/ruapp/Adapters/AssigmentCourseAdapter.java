@@ -25,6 +25,8 @@ public class AssigmentCourseAdapter extends RecyclerView.Adapter<AssigmentCourse
     public void onBindViewHolder(@NonNull AssigmentCourseAdapter.viewHolder holder, int i) {
         ScheduleObject obj = new AssigmenetHandler().getSchedule().get(i);
         holder.courseCode.setText(obj.getVal("courseCode"));
+        String msg = obj.getVal("section").replace("Section:","");
+        holder.courseSection.setText(msg.substring(0,msg.length()-1)+"1");
     }
 
     @Override
@@ -36,12 +38,14 @@ public class AssigmentCourseAdapter extends RecyclerView.Adapter<AssigmentCourse
     class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView courseCode;
+        TextView courseSection;
         TextView assignmentTitle;
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             courseCode= itemView.findViewById(R.id.aCourseCode);
+            courseSection= itemView.findViewById(R.id.aCourseSection);
             assignmentTitle= itemView.findViewById(R.id.aCourseTitle);
         }
 

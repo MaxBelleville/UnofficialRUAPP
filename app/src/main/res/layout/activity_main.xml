@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,9 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rect"
         android:elevation="4dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/courseCode"
@@ -129,11 +127,10 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/navFrame"
+        android:id="@+id/nav_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showNextClass">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/showNextClass">
 
         <fragment
             android:id="@+id/nav_host_fragment"
@@ -144,4 +141,4 @@
             app:navGraph="@navigation/ry_nav_graph" />
     </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

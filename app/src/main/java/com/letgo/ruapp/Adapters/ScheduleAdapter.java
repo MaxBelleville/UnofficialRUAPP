@@ -78,7 +78,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.viewHo
         @Override
         public void onClick(View view) {
             ScheduleHandler handler= new ScheduleHandler();
-            handler.click(view,getAdapterPosition());
+            if(viewAssigned.getVisibility()==View.VISIBLE)
+                handler.click(view,getAdapterPosition());
         }
     }
 }

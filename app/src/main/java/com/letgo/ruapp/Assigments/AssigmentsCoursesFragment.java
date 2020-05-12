@@ -4,12 +4,14 @@ package com.letgo.ruapp.Assigments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 
 import com.letgo.ruapp.Adapters.AssigmentCourseAdapter;
 import com.letgo.ruapp.MainActivity;
@@ -17,9 +19,17 @@ import com.letgo.ruapp.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AssigmentsCoursesFragment extends Fragment {
     @BindView(R.id.recyclerViewCourses) RecyclerView recyclerView;
+
+    @OnClick(R.id.d2lview)
+    public void click(View view){
+        Bundle bundle = new Bundle();
+        bundle.putString("Url","https://courses.ryerson.ca/d2l/home");
+        Navigation.findNavController(view).navigate(R.id.action_assigmentsCourses_to_webActivity,bundle);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

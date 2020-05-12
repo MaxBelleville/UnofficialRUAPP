@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:clipToPadding="false"
-        android:paddingBottom="128dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

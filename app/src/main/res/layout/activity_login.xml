@@ -67,9 +67,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
-                    android:background="@color/ryersonBlue"
+                    android:background="@drawable/rounded_rect"
                     android:text="Log in"
                     android:textColor="@android:color/white"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ru_token" />
 
@@ -164,7 +165,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Incorrect password or username, please try again."
                     android:textColor="@android:color/holo_red_dark"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imageView" />
 

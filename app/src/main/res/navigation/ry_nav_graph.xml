@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_homeFragment_to_assigmentBlank"
             app:destination="@+id/assigmentBlank" />
+        <action
+            android:id="@+id/action_homeFragment_to_travelActivity"
+            app:destination="@id/travelActivity" />
     </fragment>
     <fragment
         android:id="@+id/scheduleFragment"
@@ -41,6 +44,9 @@
                 app:argType="Integer"
                 android:defaultValue="0"/>
         </action>
+        <action
+            android:id="@+id/action_assigmentsCourses_to_webActivity"
+            app:destination="@id/webActivity" />
     </fragment>
     <fragment
         android:id="@+id/assigmentsList"
@@ -65,4 +71,14 @@
             android:id="@+id/action_assigmentBlank_to_assigmentsList"
             app:destination="@id/assigmentsList" />
     </fragment>
+    <activity
+        android:id="@+id/webActivity"
+        android:name="com.letgo.ruapp.WebActivity"
+        android:label="activity_web"
+        tools:layout="@layout/activity_web" />
+    <activity
+        android:id="@+id/travelActivity"
+        android:name="com.letgo.ruapp.TravelActivity"
+        android:label="activity_travel"
+        tools:layout="@layout/activity_travel" />
 </navigation>

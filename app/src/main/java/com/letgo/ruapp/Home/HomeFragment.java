@@ -29,6 +29,10 @@ public class HomeFragment extends Fragment {
     public void click2(View v){
         Navigation.findNavController(v).navigate(HomeFragmentDirections.actionHomeFragmentToAssigmentsFragment());
     }
+    @OnClick(R.id.Travel)
+    public void click3(View v){
+       Navigation.findNavController(v).navigate(HomeFragmentDirections.actionHomeFragmentToTravelActivity());
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

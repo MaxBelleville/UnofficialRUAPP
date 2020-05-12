@@ -1,6 +1,7 @@
 package com.letgo.ruapp.Handlers;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.Navigation;
@@ -21,15 +22,18 @@ public class AssigmenetHandler {
     public void addObject(ScheduleObject scheduleObject) {
         boolean found=false;
         for (ScheduleObject obj: assignments){
-            if (obj.getVal("courseCode")==scheduleObject.getVal("courseCode"))
-                    found=true;
+            if (obj.getVal("courseCode").equals(scheduleObject.getVal("courseCode")))
+                found = true;
         }
-        if(!found) {
+        if(!found&&!scheduleObject.getVal("courseCode").isEmpty()) {
             ScheduleObject schedule = new ScheduleObject();
             schedule.setInfo("section", scheduleObject.getVal("section"));
             schedule.setInfo("courseCode", scheduleObject.getVal("courseCode"));
             assignments.add(schedule);
         }
+    }
+    public void clear(){
+        assignments.clear();
     }
 
     public void click(View view, int pos) {
