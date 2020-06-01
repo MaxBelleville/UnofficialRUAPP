@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,6 +30,8 @@ import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
@@ -64,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     private void startLogin(){
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        incorrect.setText("Ryerson is rejecting your login attempt, try again later.");
         if (mWifi.isConnected()) {
             String str= new LoginHandler().load(getApplicationContext());
             if (!str.isEmpty()){
@@ -76,13 +80,20 @@ public class LoginActivity extends AppCompatActivity {
             call.enqueue(new SimpleCallback<ResponseBody>() {
                 @Override
                 public void getResponse(ResponseBody body) throws IOException {
-                    Document document = Jsoup.parse(body.string());
-                    exec=document.getElementsByAttributeValue("name","execution").val();
-                    if(!str.isEmpty()){
-                        String[] split =str.split("\t");
-                        login(split[0],split[1],"None");
+                    Document document = null;
+                    try {
+                        document = Jsoup.parse(body.string());
+                        exec=document.getElementsByAttributeValue("name","execution").val();
+                        if(!str.isEmpty()){
+                            String[] split =str.split("\t");
+                            login(split[0],split[1],"None");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
+                @Override
+                public void handleError(int code) { error(); }
             });
         }
         else {
@@ -104,9 +115,11 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new SimpleCallback<ResponseBody>() {
             @Override
             public void getResponse(ResponseBody body) throws IOException {
+                Log.d("Special","Got past the second step");
                 Document document = Jsoup.parse(body.string());
                 String exec2=document.getElementsByAttributeValue("name","execution").val();
                 if(!document.title().startsWith("Log In Suc")) {
+                    Log.d("Special","Error failed");
                     incorrect.setText("Authentication error, Please try again.");
                     loadingLayout.setVisibility(View.GONE);
                     loginLayout.setVisibility(View.VISIBLE);
@@ -115,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new SimpleCallback<ResponseBody>() {
                         @Override
                         public void getResponse(ResponseBody response) throws IOException {
+                            Log.d("Special","Got to final step");
                             new LoginHandler().save(getApplicationContext(),user,pass);
                             new ScheduleHandler().readSchedule(getApplicationContext());
                         }

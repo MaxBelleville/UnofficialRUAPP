@@ -121,8 +121,9 @@ public class ScheduleHandler {
             @Override
             public void getResponse(ResponseBody response) throws IOException {
                 Document document = Jsoup.parse(response.string());
-                Element elem = document.select(".schedBrowserToday .weeklyresult,.schedBrowserInformation").get(0);
-                sdf.applyPattern("EEEE, MMMM dd, yyyy");
+                if (!document.outerHtml().contains("No Schedule found")) {
+                    Element elem = document.select(".schedBrowserToday .weeklyresult,.schedBrowserInformation").get(0);
+                    sdf.applyPattern("EEEE, MMMM dd, yyyy");
                     try {
                         Date date = sdf.parse(elem.text());
                         sdf.applyPattern("yyyy-MM-dd");
@@ -151,6 +152,11 @@ public class ScheduleHandler {
                         }
                     });
                 }
+                else {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    context.startActivity(intent);
+                }
+            }
         });
     }
     private void parse(String str) throws ParseException {
