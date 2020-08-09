@@ -36,9 +36,4 @@ public class AssigmenetHandler {
         assignments.clear();
     }
 
-    public void click(View view, int pos) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("ID", pos);
-        Navigation.findNavController(view).navigate(R.id.action_assigmentsCourses_to_assigmentBlank,bundle);
-    }
 }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 import com.letgo.ruapp.Adapters.AssigmentCourseAdapter;
 import com.letgo.ruapp.MainActivity;
@@ -39,7 +38,7 @@ public class AssigmentsCoursesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.content_assigments_courses, container, false);
+        View view= inflater.inflate(R.layout.content_assignments_courses, container, false);
         ((MainActivity) requireActivity()).setCanGoBack(view);
         ButterKnife.bind(this,view);
         createRecyclerView();

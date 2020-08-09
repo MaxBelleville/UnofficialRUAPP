@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         if(viewAssigned.getVisibility()==View.VISIBLE){
             bundle.putInt("ID", handler.find(obj));
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).popBackStack(R.id.homeFragment,false);
-            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeFragment_to_assigmentBlank,bundle);
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeFragment_to_assigmentsList,bundle);
         }
     }
     private String startTime = "";

@@ -28,7 +28,6 @@ public class WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         ButterKnife.bind(this);
-        Log.d("Special","Start");
         String url = getIntent().getStringExtra("Url");
         webView.getSettings().setUserAgentString(getString(R.string.user_agent));
         webView.getSettings().setJavaScriptEnabled(true);

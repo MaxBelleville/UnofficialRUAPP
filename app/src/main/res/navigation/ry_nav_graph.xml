@@ -10,49 +10,38 @@
         android:label="content_home"
         tools:layout="@layout/content_home" >
         <action
-            android:id="@+id/action_homeFragment_to_scheduleFragment"
-            app:destination="@id/scheduleFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_assigmentsFragment"
             app:destination="@id/assigmentsCourses" />
         <action
-            android:id="@+id/action_homeFragment_to_assigmentBlank"
-            app:destination="@+id/assigmentBlank" />
-        <action
             android:id="@+id/action_homeFragment_to_travelActivity"
             app:destination="@id/travelActivity" />
-    </fragment>
-    <fragment
-        android:id="@+id/scheduleFragment"
-        android:name="com.letgo.ruapp.Schedule.ScheduleFragment"
-        android:label="content_schedule"
-        tools:layout="@layout/content_schedule" >
         <action
-            android:id="@+id/action_scheduleFragment_to_assigmentBlank"
+            android:id="@+id/action_homeFragment_to_scheduleFragment"
+            app:destination="@id/scheduleFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_assigmentsList"
+            app:destination="@id/assigmentsList" />
+        <action
+            android:id="@+id/action_homeFragment_to_assigmentBlank"
             app:destination="@id/assigmentBlank" />
     </fragment>
     <fragment
         android:id="@+id/assigmentsCourses"
         android:name="com.letgo.ruapp.Assigments.AssigmentsCoursesFragment"
         android:label="content_assigments_courses"
-        tools:layout="@layout/content_assigments_courses" >
-        <action
-            android:id="@+id/action_assigmentsCourses_to_assigmentBlank"
-            app:destination="@id/assigmentBlank">
-            <arugment
-                android:name="ID"
-                app:argType="Integer"
-                android:defaultValue="0"/>
-        </action>
+        tools:layout="@layout/content_assignments_courses" >
         <action
             android:id="@+id/action_assigmentsCourses_to_webActivity"
             app:destination="@id/webActivity" />
+        <action
+            android:id="@+id/action_assigmentsCourses_to_assigmentsList"
+            app:destination="@id/assigmentsList" />
     </fragment>
     <fragment
         android:id="@+id/assigmentsList"
         android:name="com.letgo.ruapp.Assigments.AssigmentsList"
         android:label="content_assigments_list"
-        tools:layout="@layout/content_assigments_list" >
+        tools:layout="@layout/content_assignments_list" >
         <action
             android:id="@+id/action_assigmentsList_to_assigmentFragment"
             app:destination="@id/assigmentFragment" />
@@ -61,15 +50,19 @@
         android:id="@+id/assigmentFragment"
         android:name="com.letgo.ruapp.Assigments.AssigmentFragment"
         android:label="content_assigment"
-        tools:layout="@layout/content_assigment" />
+        tools:layout="@layout/content_assignment" >
+        <action
+            android:id="@+id/action_assigmentFragment_to_assignmentCreate"
+            app:destination="@id/assignmentCreate" />
+    </fragment>
     <fragment
         android:id="@+id/assigmentBlank"
         android:name="com.letgo.ruapp.Assigments.AssigmentBlank"
         android:label="content_assigment_blank"
-        tools:layout="@layout/content_assigment_blank" >
+        tools:layout="@layout/content_assignment_blank" >
         <action
-            android:id="@+id/action_assigmentBlank_to_assigmentsList"
-            app:destination="@id/assigmentsList" />
+            android:id="@+id/action_assigmentBlank_to_assignmentCreate"
+            app:destination="@id/assignmentCreate" />
     </fragment>
     <activity
         android:id="@+id/webActivity"
@@ -81,4 +74,18 @@
         android:name="com.letgo.ruapp.TravelActivity"
         android:label="activity_travel"
         tools:layout="@layout/activity_travel" />
+    <fragment
+        android:id="@+id/assignmentCreate"
+        android:name="com.letgo.ruapp.Assigments.AssignmentCreate"
+        android:label="content_assignment_create"
+        tools:layout="@layout/content_assignment_create" />
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.letgo.ruapp.Schedule.ScheduleFragment"
+        android:label="content_schedule"
+        tools:layout="@layout/content_schedule" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_assigmentsList"
+            app:destination="@id/assigmentsList" />
+    </fragment>
 </navigation>

@@ -1,11 +1,13 @@
 package com.letgo.ruapp.Adapters;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import com.letgo.ruapp.Handlers.AssigmenetHandler;
 import com.letgo.ruapp.Handlers.ScheduleHandler;
@@ -51,8 +53,10 @@ public class AssigmentCourseAdapter extends RecyclerView.Adapter<AssigmentCourse
 
         @Override
         public void onClick(View view) {
-            AssigmenetHandler handler= new AssigmenetHandler();
-            handler.click(view,getAdapterPosition());
+            Bundle bundle = new Bundle();
+            bundle.putInt("ID", getAdapterPosition());
+            Navigation.findNavController(view).navigate(R.id.action_assigmentsCourses_to_assigmentsList,bundle);
+
         }
     }
 

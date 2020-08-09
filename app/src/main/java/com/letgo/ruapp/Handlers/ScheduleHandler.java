@@ -3,6 +3,7 @@ package com.letgo.ruapp.Handlers;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.Navigation;
@@ -122,7 +123,7 @@ public class ScheduleHandler {
             public void getResponse(ResponseBody response) throws IOException {
                 Document document = Jsoup.parse(response.string());
                 if (!document.outerHtml().contains("No Schedule found")) {
-                    Element elem = document.select(".schedBrowserToday .weeklyresult,.schedBrowserInformation").get(0);
+                    Element elem = document.select(".schedBrowserToday .weeklyresult,.schedListViewInformation").get(0);
                     sdf.applyPattern("EEEE, MMMM dd, yyyy");
                     try {
                         Date date = sdf.parse(elem.text());
@@ -138,7 +139,7 @@ public class ScheduleHandler {
                         @Override
                         public void getResponse(ResponseBody response) throws IOException {
                             Document document = Jsoup.parse(response.string());
-                            Elements elems = document.select(".schedBrowserToday .weeklyresult,.schedBrowserInformation");
+                            Elements elems = document.select(".schedBrowserToday .weeklyresult,.schedListViewInformation");
                             for (Element elem : elems) {
                                 try {
                                     parse(elem.outerHtml());
@@ -278,6 +279,6 @@ public class ScheduleHandler {
     public void click(View view, int pos) {
         Bundle bundle = new Bundle();
         bundle.putInt("ID", find(pos));
-        Navigation.findNavController(view).navigate(R.id.action_scheduleFragment_to_assigmentBlank,bundle);
+        Navigation.findNavController(view).navigate(R.id.action_scheduleFragment_to_assigmentsList,bundle);
     }
 }
